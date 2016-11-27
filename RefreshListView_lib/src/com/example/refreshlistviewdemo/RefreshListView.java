@@ -3,8 +3,7 @@ package com.example.refreshlistviewdemo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.example.smartbj.R;
-import com.example.smartbj.utils.PrintLog;
+import com.example.refreshlistviewdemo.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -62,12 +61,10 @@ public class RefreshListView extends ListView {
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {// 停止状态
 
-					PrintLog.print(getLastVisiblePosition() + "<>" + getAdapter().getCount());
 
 					if (getLastVisiblePosition() == getAdapter().getCount() - 1 && !isLoadMore) {// 防止刷新更多没有结束，又刷新
 						// 状态改变
 						isLoadMore = true;
-						PrintLog.print("记载更多");
 						// 加载更多条现实
 						mFootView.setPadding(0, 0, 0, 0);
 						// 事件监听
@@ -230,10 +227,10 @@ public class RefreshListView extends ListView {
 
 			break;
 		case MotionEvent.ACTION_MOVE:
-
-			if (!isCarouselCompleteShow()) {
-				break;
-			}
+//
+//			if (!isCarouselCompleteShow()) {
+//				break;
+//			}
 
 			if (refresh_state == LOADING_STATE) {
 				return true;
