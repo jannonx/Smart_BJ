@@ -26,7 +26,6 @@ public class RefreshListView extends ListView {
 	private LinearLayout mFootView;
 	private int mRefreshViewHeight;
 	private int mFootViewHeight;
-	private View vp_image;
 
 	// 下拉条的三个状态
 	private final static int PULL_STATE = 1;
@@ -99,14 +98,8 @@ public class RefreshListView extends ListView {
 		void loadingMore();
 	}
 
-	// 添加子组件
-	public void addChildView(View v_carousel) {
-		vp_image = v_carousel;
-		mHeadRootView.addView(v_carousel);
-	}
 
 	public void updateState() {
-		System.out.println("isLoadMore"+isLoadMore);
 		if (isLoadMore) {
 			// 隐藏加载更多菜单
 			mFootView.setPadding(0, 0, 0, -mFootViewHeight);
@@ -139,38 +132,24 @@ public class RefreshListView extends ListView {
 		return sdf.format(new Date());
 	}
 
-	private boolean isCarouselCompleteShow() {
-		int[] outLocation = new int[2];
-		this.getLocationInWindow(outLocation);
-		// 获取lv在屏幕上的y坐标
-		int lv_y = outLocation[1];
-
-		vp_image.getLocationInWindow(outLocation);
-		// 获取vp在屏幕上的y坐标
-		int vp_y = outLocation[1];
-
-		if (lv_y <= vp_y) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
 	private void initHead() {
 		mHeadRootView = (LinearLayout) View.inflate(getContext(), R.layout.loading_listview_head, null);
 
 		mRefreshView = (LinearLayout) mHeadRootView.findViewById(R.id.rl_listview_refreshview);
+		//箭头
 		iv_arr = (ImageView) mHeadRootView.findViewById(R.id.iv_listview_head_arr);
+		//加载进度圆圈
 		pd_ring = (ProgressBar) mHeadRootView.findViewById(R.id.pb_listview_head_ring);
+		//刷新的描述
 		tv_desc = (TextView) mHeadRootView.findViewById(R.id.tv_listview_head_desc);
+		//刷新日期
 		tv_update = (TextView) mHeadRootView.findViewById(R.id.tv_listview_head_update);
 
 		mRefreshView.measure(0, 0);// 随意测量
 		mRefreshViewHeight = mRefreshView.getMeasuredHeight();
 		// 隐藏 RelativeLayout设置padding有问题
 		mRefreshView.setPadding(0, -mRefreshViewHeight, 0, 0);
-
+		//加载头部
 		addHeaderView(mHeadRootView);
 
 	}
@@ -219,6 +198,7 @@ public class RefreshListView extends ListView {
 		ra_down.setFillAfter(true);
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		switch (ev.getAction()) {
@@ -227,11 +207,6 @@ public class RefreshListView extends ListView {
 
 			break;
 		case MotionEvent.ACTION_MOVE:
-//
-//			if (!isCarouselCompleteShow()) {
-//				break;
-//			}
-
 			if (refresh_state == LOADING_STATE) {
 				return true;
 			}
@@ -264,7 +239,6 @@ public class RefreshListView extends ListView {
 			break;
 
 		case MotionEvent.ACTION_UP:
-
 			// 松开的时候
 			if (refresh_state == PULL_STATE) {
 				// 继续隐藏
